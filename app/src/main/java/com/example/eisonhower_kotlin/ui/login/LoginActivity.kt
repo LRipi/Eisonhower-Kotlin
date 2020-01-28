@@ -100,12 +100,10 @@ class LoginActivity : AppCompatActivity() {
             }
 
             register_button.setOnClickListener {
-                //startActivity<LoginActivity::class.java>(this)
                 val intent = Intent(this@LoginActivity, RegisterPage::class.java)
                 intent.putExtra("Name", "Billy le Bob")
                 startActivity(intent)
                 finish()
-                //Toast.makeText(this@LoginActivity, "You clicked me.", Toast.LENGTH_SHORT).show()
             }
 
         }

@@ -1,5 +1,6 @@
 package com.example.eisonhower_kotlin
 
+import android.content.Intent
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,7 +21,8 @@ class MatrixActivity : AppCompatActivity() {
         val urgentNotImportantCard = findViewById<ConstraintLayout>(R.id.urgent_not_important_layout)
 
         urgentNotImportantCard.setOnClickListener {
-            Toast.makeText(this@MatrixActivity, "yeay", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MatrixActivity, TaskListActivity::class.java)
+            startActivity(intent)
         }
 
 
