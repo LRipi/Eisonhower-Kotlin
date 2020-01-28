@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginActivity">
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.eisonhower_kotlin.ui.login.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+    <activity
+        android:id="@+id/register_page"
+        android:name="com.example.eisonhower_kotlin.RegisterPage"
+        android:label="activity_register_page"
+        tools:layout="@layout/activity_register_page" />
+    <fragment
+        android:id="@+id/matrix"
+        android:name="com.example.eisonhower_kotlin.matrix"
+        android:label="fragment_matrix"
+        tools:layout="@layout/fragment_matrix" />
+</navigation>
