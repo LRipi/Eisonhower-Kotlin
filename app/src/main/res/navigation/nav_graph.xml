@@ -14,9 +14,4 @@
         android:name="com.example.eisonhower_kotlin.RegisterPage"
         android:label="activity_register_page"
         tools:layout="@layout/activity_register_page" />
-    <fragment
-        android:id="@+id/matrix"
-        android:name="com.example.eisonhower_kotlin.matrix"
-        android:label="fragment_matrix"
-        tools:layout="@layout/fragment_matrix" />
 </navigation>

@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.navigation.findNavController
+import com.example.eisonhower_kotlin.MatrixActivity
 
 import com.example.eisonhower_kotlin.R
 import com.example.eisonhower_kotlin.RegisterPage
@@ -64,7 +65,8 @@ class LoginActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK)
 
             //Complete and destroy login activity once successful
-            finish()
+            val intent = Intent(this@LoginActivity, MatrixActivity::class.java)
+            startActivity(intent)
         })
 
         username.afterTextChanged {
@@ -102,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
                 val intent = Intent(this@LoginActivity, RegisterPage::class.java)
                 intent.putExtra("Name", "Billy le Bob")
                 startActivity(intent)
+                finish()
                 //Toast.makeText(this@LoginActivity, "You clicked me.", Toast.LENGTH_SHORT).show()
             }
 
