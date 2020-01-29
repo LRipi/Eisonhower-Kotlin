@@ -1,22 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/not_important_not_urgent_style"
-        android:padding="15dp"
-        android:text="placeholder"
-        android:textColor="@android:color/black"
-        android:textColorHighlight="@android:color/black"
-        android:textColorHint="@android:color/black"
-        android:textColorLink="@android:color/black"
-        android:textSize="24sp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/task_tile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/not_important_not_urgent_style"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:paddingRight="45dp"
+            android:paddingBottom="15dp"
+            android:text="pfjgfdgslkdfndgfknblfdg,bdfgdfg"
+            android:textColor="@android:color/black"
+            android:textColorHighlight="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textColorLink="@android:color/black"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.eisonhower_kotlin.FontAwesome
+            android:id="@+id/check_button"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:shadowRadius="10"
+            android:text="\uF00C"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/task_tile"
+            app:layout_constraintEnd_toEndOf="@+id/task_tile"
+            app:layout_constraintTop_toTopOf="@+id/task_tile"
+            app:layout_constraintVertical_bias="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

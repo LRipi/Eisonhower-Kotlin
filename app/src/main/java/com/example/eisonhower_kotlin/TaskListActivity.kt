@@ -16,7 +16,7 @@ class TaskListActivity : AppCompatActivity() {
         val listData = arrayOfNulls<String>(10)
         for (i in 0 until 10)
         {
-            listData[i] = "toto"
+            listData[i] = "toto jkj sdf dsf dsdfhsdjfh ds fdjf jdsh fdshf dfkjhdskfj sdkjf skdjfjhsdh flksdfkhds fjksdhf"
         }
 
         val adapter = TaskListAdapter(this, listData as Array<String>)

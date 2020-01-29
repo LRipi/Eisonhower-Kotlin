@@ -1,11 +1,13 @@
 package com.example.eisonhower_kotlin
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import android.widget.Toast
 
 class TaskListAdapter(private val context: Context,
                       private val dataSource: Array<String>) : BaseAdapter() {
@@ -35,9 +37,26 @@ class TaskListAdapter(private val context: Context,
         // Get view for row item
         val rowView = inflater.inflate(R.layout.task_card , parent, false)
 
-        val cardTitle = rowView.findViewById<TextView>(R.id.textView)
 
-        cardTitle.text = getItem(position) as String
+        val card = rowView.findViewById<TextView>(R.id.task_tile)
+
+        //how to setup style based on the input category
+        card.background = context.resources.getDrawable(R.drawable.urgent_important_style)
+
+        val check_button = rowView.findViewById<FontAwesome>(R.id.check_button)
+
+        // validate the task
+        check_button.setOnClickListener {
+            Toast.makeText(context, "click button", Toast.LENGTH_SHORT).show()
+        }
+
+        // edit task
+        card.setOnClickListener{
+            Toast.makeText(context, "click card", Toast.LENGTH_SHORT).show()
+        }
+
+        // setup the title of the card
+        card.text = getItem(position) as String
 
         return rowView
     }
