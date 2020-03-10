@@ -12,7 +12,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 
 class TaskListAdapter(private val context: Context,
-                      private val dataSource: Array<String>) : BaseAdapter() {
+                      private val dataSource: Array<String>,
+                      private val style : Int) : BaseAdapter() {
 
     private val inflater: LayoutInflater
             = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -43,7 +44,7 @@ class TaskListAdapter(private val context: Context,
         val card = rowView.findViewById<TextView>(R.id.task_tile)
 
         //how to setup style based on the input category
-        card.background = context.resources.getDrawable(R.drawable.urgent_important_style)
+        card.background = context.resources.getDrawable(style)
 
         val check_button = rowView.findViewById<FontAwesome>(R.id.check_button)
 
