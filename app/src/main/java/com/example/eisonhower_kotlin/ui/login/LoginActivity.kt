@@ -1,7 +1,9 @@
 package com.example.eisonhower_kotlin.ui.login
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -9,13 +11,17 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
+import com.example.eisonhower_kotlin.ApiCalls
 import com.example.eisonhower_kotlin.MatrixActivity
 
 import com.example.eisonhower_kotlin.R
@@ -100,11 +106,25 @@ class LoginActivity : AppCompatActivity() {
             }
 
             register_button.setOnClickListener {
-                val intent = Intent(this@LoginActivity, RegisterPage::class.java)
+
+                val permission = ContextCompat.checkSelfPermission(this@LoginActivity, Manifest.permission.RECORD_AUDIO)
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    println("the permission was not granted")
+                }
+                else {
+                    println("the permission was already granted")
+                }
+
+                ActivityCompat.requestPermissions(this@LoginActivity, arrayOf(Manifest.permission.RECORD_AUDIO), 101)
+
+                //ApiCalls().Auth("toto", "tata")
+                /*val intent = Intent(this@LoginActivity, RegisterPage::class.java)
                 intent.putExtra("Name", "Billy le Bob")
                 startActivity(intent)
-                finish()
+                finish()*/
             }
+
+
 
         }
     }

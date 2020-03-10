@@ -1,6 +1,7 @@
 package com.example.eisonhower_kotlin
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 
 class TaskListAdapter(private val context: Context,
                       private val dataSource: Array<String>) : BaseAdapter() {
@@ -53,6 +55,13 @@ class TaskListAdapter(private val context: Context,
         // edit task
         card.setOnClickListener{
             Toast.makeText(context, "click card", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(context, EditTaskActivity::class.java)
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(context, intent, null)
+
+            //val intent = Intent(context, EditTaskActivity::class.java)
+            //startActivity(intent)
         }
 
         // setup the title of the card
