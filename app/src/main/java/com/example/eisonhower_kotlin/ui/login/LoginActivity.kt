@@ -2,22 +2,37 @@ package com.example.eisonhower_kotlin.ui.login
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.eisonhower_kotlin.*
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+
+import com.example.eisonhower_kotlin.MatrixActivity
+import com.example.eisonhower_kotlin.R
+import com.example.eisonhower_kotlin.network.EisonhowerService
+import com.example.eisonhower_kotlin.network.LoginData
+import com.example.eisonhower_kotlin.network.responseObject.Login
+import okhttp3.*
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
+    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -90,8 +105,40 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                loginViewModel.login(username.text.toString(), password.text.toString())
-                finish()
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("http://vps.lemartret.com:3000/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val eisonhowerService = retrofit.create(EisonhowerService::class.java)
+                val callAsync = eisonhowerService.login(LoginData(username.text.toString(), password.text.toString()))
+
+                callAsync.enqueue(object: Callback<Login>
+                {
+
+                    override fun onResponse(call: retrofit2.Call<Login>, response: Response<Login>)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            val apiResponse = response.body()
+                            Log.d("Login Response: ", "Id: " + apiResponse?.user?.id.toString() + "\nToken: " + apiResponse?.user?.token.toString())
+                            if (apiResponse?.user?.token.toString() != null) {
+                                val nextScreenIntent = Intent(this@LoginActivity, MatrixActivity::class.java).apply {
+                                    putExtra("JWT_TOKEN", apiResponse?.user?.token.toString())
+                                }
+                                startActivity(nextScreenIntent)
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                        }
+                    }
+
+                    override fun onFailure(call: retrofit2.Call<Login>,t: Throwable)
+                    {
+                        Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                    }
+                })
             }
 
             register_button.setOnClickListener {
