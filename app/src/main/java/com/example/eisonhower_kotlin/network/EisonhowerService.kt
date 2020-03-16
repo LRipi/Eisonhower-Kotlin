@@ -5,6 +5,7 @@ import com.example.eisonhower_kotlin.network.responseObject.NumberOfTasks
 import com.example.eisonhower_kotlin.network.responseObject.Register
 import com.example.eisonhower_kotlin.network.responseObject.Tasks
 import com.google.gson.annotations.SerializedName
+import com.google.gson.internal.bind.util.ISO8601Utils
 import retrofit2.Call
 import retrofit2.http.*
 import com.example.eisonhower_kotlin.network.responseObject.About as About
@@ -51,6 +52,24 @@ interface EisonhowerService {
         @Query ("importance") importance : Boolean,
         @Query ("urgence") urgence : Boolean
     ) : Call<Tasks>
+
+    @Headers(
+        "Accept: application/json"
+    )
+    @POST("tasks")
+    fun createTask(
+        @Header("x-access-token") jwtToken : String,
+        @Body toCreateTask : toCreateTask
+    ) : Call<Void>
+
+    @Headers(
+        "Accept: application/json"
+    )
+    @POST("tasks")
+    fun updateTask(
+        @Header("x-access-token") jwtToken : String,
+        @Body toCreateTask : toCreateTask
+    ) : Call<Void>
 }
 
 data class LoginData (
@@ -62,4 +81,13 @@ data class RegisterData (
     @SerializedName("login") var login: String,
     @SerializedName("password") var password: String,
     @SerializedName("name") var name: String
+)
+
+data class toCreateTask(
+    @SerializedName("urgence") var urgence : String,
+    @SerializedName("importance") var importance : String,
+    @SerializedName("title") var title : String,
+    @SerializedName("description") var description : String,
+    @SerializedName("deadline") var deadline : String,
+    @SerializedName("status") var status : String
 )
