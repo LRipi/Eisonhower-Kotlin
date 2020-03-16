@@ -17,6 +17,7 @@ import com.example.eisonhower_kotlin.network.RegisterData
 import com.example.eisonhower_kotlin.network.responseObject.NumberOfTasks
 import com.example.eisonhower_kotlin.network.responseObject.Register
 import com.example.eisonhower_kotlin.ui.login.LoginActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_matrix.view.*
 import retrofit2.Callback
 import retrofit2.Response
@@ -140,6 +141,14 @@ class MatrixActivity : AppCompatActivity() {
         val urgentImportantCard = findViewById<ConstraintLayout>(R.id.urgent_important_layout)
         val notUrgentImportantCard = findViewById<ConstraintLayout>(R.id.not_urgent_important_layout)
         val notUrgentNotImportantCard = findViewById<ConstraintLayout>(R.id.not_urgent_not_important_layout)
+
+        val addTaskButton = findViewById<FloatingActionButton>(R.id.addTextButton)
+
+        addTaskButton.setOnClickListener{
+            val intent = Intent(this@MatrixActivity, EditTaskActivity::class.java)
+            intent.putExtra("JWT_TOKEN", this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"))
+            startActivity(intent)
+        }
 
         val retrofit = Retrofit.Builder()
             .baseUrl("http://vps.lemartret.com:3000/")
