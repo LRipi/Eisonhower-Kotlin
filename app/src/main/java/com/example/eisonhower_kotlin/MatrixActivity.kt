@@ -240,24 +240,28 @@ class MatrixActivity : AppCompatActivity() {
         urgentNotImportantCard.setOnClickListener {
             val intent = Intent(this@MatrixActivity, TaskListActivity::class.java)
             intent.putExtra("Style", "UrgentNotImportant")
+            intent.putExtra("JWT_TOKEN", this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"))
             startActivity(intent)
         }
 
         urgentImportantCard.setOnClickListener {
             val intent = Intent(this@MatrixActivity, TaskListActivity::class.java)
             intent.putExtra("Style", "UrgentImportant")
+            intent.putExtra("JWT_TOKEN", this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"))
             startActivity(intent)
         }
 
         notUrgentImportantCard.setOnClickListener {
             val intent = Intent(this@MatrixActivity, TaskListActivity::class.java)
             intent.putExtra("Style", "NotUrgentImportant")
+            intent.putExtra("JWT_TOKEN", this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"))
             startActivity(intent)
         }
 
         notUrgentNotImportantCard.setOnClickListener {
             val intent = Intent(this@MatrixActivity, TaskListActivity::class.java)
             intent.putExtra("Style", "NotUrgentNotImportant")
+            intent.putExtra("JWT_TOKEN", this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"))
             startActivity(intent)
         }
 

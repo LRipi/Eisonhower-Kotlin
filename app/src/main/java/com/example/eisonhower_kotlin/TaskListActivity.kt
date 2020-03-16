@@ -3,8 +3,20 @@ package com.example.eisonhower_kotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import com.example.eisonhower_kotlin.network.EisonhowerService
+import com.example.eisonhower_kotlin.network.RegisterData
+import com.example.eisonhower_kotlin.network.responseObject.Register
+import com.example.eisonhower_kotlin.network.responseObject.Task
+import com.example.eisonhower_kotlin.network.responseObject.Tasks
+import com.example.eisonhower_kotlin.ui.login.LoginActivity
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Collections.list
 
 class TaskListActivity : AppCompatActivity() {
 
@@ -23,16 +35,53 @@ class TaskListActivity : AppCompatActivity() {
 
         val taskList = findViewById<ListView>(R.id.task_list)
 
-        val listData = arrayOfNulls<String>(10)
-        for (i in 0 until 10)
-        {
-            listData[i] = "toto jkj sdf dsf dsdfhsdjfh ds fdjf jdsh fdshf dfkjhdskfj sdkjf skdjfjhsdh flksdfkhds fjksdhf"
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://vps.lemartret.com:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val eisonhowerService = retrofit.create(EisonhowerService::class.java)
+        val importance = when (styleKey) {
+            "UrgentImportant" -> true
+            "NotUrgentImportant" -> true
+            "UrgentNotImportant" -> false
+            else -> false
+        }
+        val urgence = when (styleKey) {
+            "UrgentImportant" -> true
+            "NotUrgentImportant" -> false
+            "UrgentNotImportant" -> true
+            else -> false
         }
 
-        val adapter = TaskListAdapter(this, listData as Array<String>, style)
+        val callAsync = eisonhowerService.listOfTasks(this@TaskListActivity.intent.getStringExtra("JWT_TOKEN"), importance, urgence)
 
-        taskList.adapter = adapter
+        callAsync.enqueue(object: Callback<Tasks>
+        {
 
+            override fun onResponse(call: retrofit2.Call<Tasks>, response: Response<Tasks>)
+            {
+                if (response.isSuccessful())
+                {
+                    val r = response.body()
+                    val listData = arrayOfNulls<String>(r?.tasks!!.size)
+                    for (i in 0 until r?.tasks!!.size)
+                    {
+                        listData[i] = r.tasks!![i].title
+                    }
+                    val adapter = TaskListAdapter(this@TaskListActivity, listData as Array<String>, style)
 
+                    taskList.adapter = adapter
+                }
+                else
+                {
+                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<Tasks>, t: Throwable)
+            {
+                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+            }
+        })
     }
 }
