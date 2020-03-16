@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModelProviders
 
 import com.example.eisonhower_kotlin.MatrixActivity
 import com.example.eisonhower_kotlin.R
+import com.example.eisonhower_kotlin.RegisterPage
+import com.example.eisonhower_kotlin.network.ApiCalls
 import com.example.eisonhower_kotlin.network.EisonhowerService
 import com.example.eisonhower_kotlin.network.LoginData
 import com.example.eisonhower_kotlin.network.responseObject.Login
