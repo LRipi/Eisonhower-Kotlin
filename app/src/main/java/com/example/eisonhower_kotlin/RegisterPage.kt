@@ -58,7 +58,7 @@ class RegisterPage : AppCompatActivity() {
                     }
                     else
                     {
-                        System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                        System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
                     }
                 }
 
