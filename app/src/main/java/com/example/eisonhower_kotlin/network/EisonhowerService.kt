@@ -1,9 +1,7 @@
 package com.example.eisonhower_kotlin.network
 
-import com.example.eisonhower_kotlin.network.responseObject.Login
-import com.example.eisonhower_kotlin.network.responseObject.NumberOfTasks
-import com.example.eisonhower_kotlin.network.responseObject.Register
-import com.example.eisonhower_kotlin.network.responseObject.Tasks
+import android.service.voice.VoiceInteractionService
+import com.example.eisonhower_kotlin.network.responseObject.*
 import com.google.gson.annotations.SerializedName
 import com.google.gson.internal.bind.util.ISO8601Utils
 import retrofit2.Call
@@ -65,10 +63,36 @@ interface EisonhowerService {
     @Headers(
         "Accept: application/json"
     )
-    @POST("tasks")
+    @PUT("tasks/{id}")
     fun updateTask(
         @Header("x-access-token") jwtToken : String,
+        @Path("id") id : String,
         @Body toCreateTask : toCreateTask
+    ) : Call<Void>
+
+    @Headers(
+        "Accept: application/json"
+    )
+    @GET("tasks/{id}")
+    fun getTask(
+        @Header("x-access-token") jwtToken : String,
+        @Path("id") id : String
+    ) : Call<BaseTask>
+
+    @DELETE ("users")
+    fun deleteUser (
+        @Header("x-access-token") jwtToken : String
+    ) : Call<Void>
+
+    @DELETE ("tasks/all")
+    fun deleteAllTasks (
+        @Header("x-access-token") jwtToken : String
+    ) : Call<Void>
+
+    @DELETE ("tasks/{id}")
+    fun deleteTask (
+        @Header("x-access-token") jwtToken : String,
+        @Path("id") id : String
     ) : Call<Void>
 }
 

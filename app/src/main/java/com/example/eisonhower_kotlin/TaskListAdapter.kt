@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat.startActivity
 
 class TaskListAdapter(private val context: Context,
                       private val dataSource: Array<String>,
+                      private val idList : Array<String>,
+                      private val jwtToken : String,
                       private val style : Int) : BaseAdapter() {
 
     private val inflater: LayoutInflater
@@ -33,6 +35,10 @@ class TaskListAdapter(private val context: Context,
     //3
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    fun getTaskId(position: Int): String {
+        return idList[position]
     }
 
     //4
@@ -58,6 +64,8 @@ class TaskListAdapter(private val context: Context,
             Toast.makeText(context, "click card", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(context, EditTaskActivity::class.java)
+            intent.putExtra("TASK_ID", getTaskId(position))
+            intent.putExtra("JWT_TOKEN", jwtToken)
             //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(context, intent, null)
 

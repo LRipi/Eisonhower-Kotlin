@@ -34,101 +34,7 @@ class MatrixActivity : AppCompatActivity() {
         val notUrgentImportantCard = findViewById<ConstraintLayout>(R.id.not_urgent_important_layout)
         val notUrgentNotImportantCard = findViewById<ConstraintLayout>(R.id.not_urgent_not_important_layout)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://vps.lemartret.com:3000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val eisonhowerService = retrofit.create(EisonhowerService::class.java)
-        val callAsync = eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), false, true)
-
-        callAsync.enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    urgentNotImportantCard.urgent_not_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
-
-        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), true, true).enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    urgentImportantCard.urgent_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
-
-        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), true, false).enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    notUrgentImportantCard.not_urgent_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
-
-        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), false, false).enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    notUrgentNotImportantCard.not_urgent_not_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
-
+        refreshTaskNumber(urgentNotImportantCard, urgentImportantCard, notUrgentImportantCard, notUrgentNotImportantCard)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,106 +50,13 @@ class MatrixActivity : AppCompatActivity() {
 
         val addTaskButton = findViewById<FloatingActionButton>(R.id.addTextButton)
 
+        refreshTaskNumber(urgentNotImportantCard, urgentImportantCard, notUrgentImportantCard, notUrgentNotImportantCard)
+
         addTaskButton.setOnClickListener{
             val intent = Intent(this@MatrixActivity, EditTaskActivity::class.java)
             intent.putExtra("JWT_TOKEN", this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"))
             startActivity(intent)
         }
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://vps.lemartret.com:3000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val eisonhowerService = retrofit.create(EisonhowerService::class.java)
-        val callAsync = eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), false, true)
-
-        callAsync.enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    urgentNotImportantCard.urgent_not_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
-
-        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), true, true).enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    urgentImportantCard.urgent_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
-
-        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), true, false).enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    notUrgentImportantCard.not_urgent_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
-
-        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), false, false).enqueue(object: Callback<NumberOfTasks>
-        {
-
-            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
-            {
-                if (response.isSuccessful())
-                {
-                    val r = response.body()
-                    notUrgentNotImportantCard.not_urgent_not_important_amount.text = r?.number.toString();
-                }
-                else
-                {
-                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
-            {
-                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
-            }
-        })
 
 
         urgentNotImportantCard.setOnClickListener {
@@ -274,8 +87,6 @@ class MatrixActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-
         //urgentImportantButton.setOnClickListener {
             //Toast.makeText(this@MatrixActivity, relativeview.z.toString() + " " + Toto.z.toString() , Toast.LENGTH_SHORT).show()
        //}
@@ -288,21 +99,168 @@ class MatrixActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://vps.lemartret.com:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val eisonhowerService = retrofit.create(EisonhowerService::class.java)
         if (R.id.disconnectMenuButton == item.itemId)
         {
             Toast.makeText(applicationContext, "disconnect", Toast.LENGTH_LONG).show()
-            return true
+            val intent = Intent(this@MatrixActivity, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
         if (R.id.eraseAllTasksMenuButton == item.itemId)
         {
+            eisonhowerService.deleteAllTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN")).enqueue(object: Callback<Void> {
+                override fun onResponse(call: retrofit2.Call<Void>, response: Response<Void>)
+                {
+                    if (response.isSuccessful())
+                    {
+                        Toast.makeText(applicationContext, "All tasks erased", Toast.LENGTH_LONG).show()
+                    }
+                    else
+                    {
+                        System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                    }
+                }
+
+                override fun onFailure(call: retrofit2.Call<Void>, t: Throwable)
+                {
+                    Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                }
+            })
             Toast.makeText(applicationContext, "erase tasks", Toast.LENGTH_LONG).show()
             return true
         }
         if (R.id.deleteAccountMenuButton == item.itemId)
         {
+            eisonhowerService.deleteUser(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN")).enqueue(object: Callback<Void> {
+                override fun onResponse(call: retrofit2.Call<Void>, response: Response<Void>)
+                {
+                    if (response.isSuccessful())
+                    {
+                        Toast.makeText(applicationContext, "User deleted", Toast.LENGTH_LONG).show()
+                        val intent = Intent(this@MatrixActivity, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    else
+                    {
+                        System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                    }
+                }
+
+                override fun onFailure(call: retrofit2.Call<Void>, t: Throwable)
+                {
+                    Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                }
+            })
             Toast.makeText(applicationContext, "delete account", Toast.LENGTH_LONG).show()
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun refreshTaskNumber(urgentNotImportantCard : ConstraintLayout,
+                          urgentImportantCard : ConstraintLayout,
+                          notUrgentImportantCard  : ConstraintLayout,
+                          notUrgentNotImportantCard : ConstraintLayout
+    ) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://vps.lemartret.com:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val eisonhowerService = retrofit.create(EisonhowerService::class.java)
+        val callAsync = eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), false, true)
+
+        callAsync.enqueue(object: Callback<NumberOfTasks>
+        {
+
+            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
+            {
+                if (response.isSuccessful())
+                {
+                    val r = response.body()
+                    urgentNotImportantCard.urgent_not_important_amount.text = r?.number.toString();
+                }
+                else
+                {
+                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
+            {
+                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+            }
+        })
+
+        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), true, true).enqueue(object: Callback<NumberOfTasks>
+        {
+
+            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
+            {
+                if (response.isSuccessful())
+                {
+                    val r = response.body()
+                    urgentImportantCard.urgent_important_amount.text = r?.number.toString();
+                }
+                else
+                {
+                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
+            {
+                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+            }
+        })
+
+        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), true, false).enqueue(object: Callback<NumberOfTasks>
+        {
+
+            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
+            {
+                if (response.isSuccessful())
+                {
+                    val r = response.body()
+                    notUrgentImportantCard.not_urgent_important_amount.text = r?.number.toString();
+                }
+                else
+                {
+                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
+            {
+                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+            }
+        })
+
+        eisonhowerService.numberOfTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN"), false, false).enqueue(object: Callback<NumberOfTasks>
+        {
+
+            override fun onResponse(call: retrofit2.Call<NumberOfTasks>, response: Response<NumberOfTasks>)
+            {
+                if (response.isSuccessful())
+                {
+                    val r = response.body()
+                    notUrgentNotImportantCard.not_urgent_not_important_amount.text = r?.number.toString();
+                }
+                else
+                {
+                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<NumberOfTasks>, t: Throwable)
+            {
+                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+            }
+        })
     }
 }

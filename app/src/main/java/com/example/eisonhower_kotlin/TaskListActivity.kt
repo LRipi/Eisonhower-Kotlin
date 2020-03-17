@@ -64,11 +64,19 @@ class TaskListActivity : AppCompatActivity() {
                 {
                     val r = response.body()
                     val listData = arrayOfNulls<String>(r?.tasks!!.size)
+                    val idList = arrayOfNulls<String>(r?.tasks!!.size)
                     for (i in 0 until r?.tasks!!.size)
                     {
                         listData[i] = r.tasks!![i].title
+                        idList[i] = r.tasks!![i].id.toString()
                     }
-                    val adapter = TaskListAdapter(this@TaskListActivity, listData as Array<String>, style)
+                    val adapter = TaskListAdapter(
+                        this@TaskListActivity,
+                        listData as Array<String>,
+                        idList as Array<String>,
+                        this@TaskListActivity.intent.getStringExtra("JWT_TOKEN"),
+                        style
+                    )
 
                     taskList.adapter = adapter
                 }
