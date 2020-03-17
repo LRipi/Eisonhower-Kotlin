@@ -2,8 +2,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.eisonhower_kotlin.MainActivity" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <item
+        android:id="@+id/deleteAccountMenuButton"
         android:orderInCategory="100"
+        android:title="Delete Account"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/disconnectMenuButton"
+        android:orderInCategory="100"
+        android:title="Disconnect"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/eraseAllTasksMenuButton"
+        android:orderInCategory="100"
+        android:title="Erase all tasks"
         app:showAsAction="never" />
 </menu>

@@ -5,7 +5,7 @@ import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -280,5 +280,29 @@ class MatrixActivity : AppCompatActivity() {
             //Toast.makeText(this@MatrixActivity, relativeview.z.toString() + " " + Toto.z.toString() , Toast.LENGTH_SHORT).show()
        //}
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (R.id.disconnectMenuButton == item.itemId)
+        {
+            Toast.makeText(applicationContext, "disconnect", Toast.LENGTH_LONG).show()
+            return true
+        }
+        if (R.id.eraseAllTasksMenuButton == item.itemId)
+        {
+            Toast.makeText(applicationContext, "erase tasks", Toast.LENGTH_LONG).show()
+            return true
+        }
+        if (R.id.deleteAccountMenuButton == item.itemId)
+        {
+            Toast.makeText(applicationContext, "delete account", Toast.LENGTH_LONG).show()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
