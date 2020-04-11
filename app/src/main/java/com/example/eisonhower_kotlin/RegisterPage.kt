@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.eisonhower_kotlin.network.EisonhowerService
 import com.example.eisonhower_kotlin.network.LoginData
@@ -55,16 +56,25 @@ class RegisterPage : AppCompatActivity() {
                     {
                             val nextScreenIntent = Intent(this@RegisterPage, LoginActivity::class.java)
                             startActivity(nextScreenIntent)
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Your account has been created", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     else
                     {
                         System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
 
                 override fun onFailure(call: retrofit2.Call<Register>, t: Throwable)
                 {
                     Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                    }
                 }
             })
         }

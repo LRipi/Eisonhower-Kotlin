@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.Toast
 import com.example.eisonhower_kotlin.network.EisonhowerService
 import com.example.eisonhower_kotlin.network.responseObject.BaseTask
 import com.example.eisonhower_kotlin.network.toCreateTask
@@ -67,13 +68,23 @@ class EditTaskActivity : AppCompatActivity() {
                                 this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN")
                             )
                             startActivity(nextScreenIntent)
+                            runOnUiThread{
+                                Toast.makeText(applicationContext, "Task Created", Toast.LENGTH_SHORT).show()
+                            }
+                            finish()
                         } else {
                             System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
+                            runOnUiThread {
+                                Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
 
                     override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
                         Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 })
             }
@@ -104,13 +115,23 @@ class EditTaskActivity : AppCompatActivity() {
                                 this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN")
                             )
                             startActivity(nextScreenIntent)
+                            runOnUiThread{
+                                Toast.makeText(applicationContext, "Task updated", Toast.LENGTH_SHORT).show()
+                            }
+                            finish()
                         } else {
                             System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
+                            runOnUiThread {
+                                Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
 
                     override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
                         Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 })
             }
@@ -133,13 +154,23 @@ class EditTaskActivity : AppCompatActivity() {
                                 this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN")
                             )
                             startActivity(nextScreenIntent)
+                            runOnUiThread{
+                                Toast.makeText(applicationContext, "Task deleted", Toast.LENGTH_SHORT).show()
+                            }
+                            finish()
                         } else {
                             System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
+                            runOnUiThread {
+                                Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
 
                     override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
                         Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 })
             }

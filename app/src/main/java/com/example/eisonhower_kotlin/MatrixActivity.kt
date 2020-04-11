@@ -1,5 +1,6 @@
 package com.example.eisonhower_kotlin
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
@@ -88,8 +89,8 @@ class MatrixActivity : AppCompatActivity() {
         }
 
         //urgentImportantButton.setOnClickListener {
-            //Toast.makeText(this@MatrixActivity, relativeview.z.toString() + " " + Toto.z.toString() , Toast.LENGTH_SHORT).show()
-       //}
+        //   Toast.makeText(this@MatrixActivity, relativeview.z.toString() + " " + Toto.z.toString() , Toast.LENGTH_SHORT).show()
+        //}
 
     }
 
@@ -136,28 +137,42 @@ class MatrixActivity : AppCompatActivity() {
         }
         if (R.id.deleteAccountMenuButton == item.itemId)
         {
-            eisonhowerService.deleteUser(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN")).enqueue(object: Callback<Void> {
-                override fun onResponse(call: retrofit2.Call<Void>, response: Response<Void>)
-                {
-                    if (response.isSuccessful())
-                    {
-                        Toast.makeText(applicationContext, "User deleted", Toast.LENGTH_LONG).show()
-                        val intent = Intent(this@MatrixActivity, LoginActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                    else
-                    {
-                        System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
-                    }
-                }
+            val alertDialog: AlertDialog? = this@MatrixActivity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setMessage("Are you sur you want to delete your acount")
+                    setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
+                            // User clicked OK button
+                        eisonhowerService.deleteUser(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN")).enqueue(object: Callback<Void> {
+                            override fun onResponse(call: retrofit2.Call<Void>, response: Response<Void>)
+                            {
+                                if (response.isSuccessful())
+                                {
+                                    Toast.makeText(applicationContext, "User deleted", Toast.LENGTH_LONG).show()
+                                    val intent = Intent(this@MatrixActivity, LoginActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                else
+                                {
+                                    System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message());
+                                }
+                            }
 
-                override fun onFailure(call: retrofit2.Call<Void>, t: Throwable)
-                {
-                    Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                            override fun onFailure(call: retrofit2.Call<Void>, t: Throwable)
+                            {
+                                Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                            }
+                        })
+                        })
+                    setNegativeButton("Cancel",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            // User cancelled the dialog
+                        })
                 }
-            })
-            Toast.makeText(applicationContext, "delete account", Toast.LENGTH_LONG).show()
+                builder.create()
+            }
+            alertDialog?.show()
             return true
         }
         return super.onOptionsItemSelected(item)
