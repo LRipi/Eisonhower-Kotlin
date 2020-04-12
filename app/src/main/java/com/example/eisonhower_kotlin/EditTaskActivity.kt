@@ -65,7 +65,7 @@ class EditTaskActivity : AppCompatActivity() {
                                 Intent(this@EditTaskActivity, MatrixActivity::class.java)
                             nextScreenIntent.putExtra(
                                 "JWT_TOKEN",
-                                this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN")
+                                this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN").toString()
                             )
                             startActivity(nextScreenIntent)
                             runOnUiThread{
@@ -112,7 +112,7 @@ class EditTaskActivity : AppCompatActivity() {
                                 Intent(this@EditTaskActivity, MatrixActivity::class.java)
                             nextScreenIntent.putExtra(
                                 "JWT_TOKEN",
-                                this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN")
+                                this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN").toString()
                             )
                             startActivity(nextScreenIntent)
                             runOnUiThread{
