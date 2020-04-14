@@ -1,9 +1,7 @@
 package com.example.eisonhower_kotlin.network
 
-import android.service.voice.VoiceInteractionService
 import com.example.eisonhower_kotlin.network.responseObject.*
 import com.google.gson.annotations.SerializedName
-import com.google.gson.internal.bind.util.ISO8601Utils
 import retrofit2.Call
 import retrofit2.http.*
 import com.example.eisonhower_kotlin.network.responseObject.About as About
@@ -14,7 +12,6 @@ interface EisonhowerService {
     fun about() : Call<About>
 
     @Headers(
-        "Accept: application/json",
         "Content-Type:application/json"
     )
     @POST("users/login")
@@ -23,17 +20,13 @@ interface EisonhowerService {
     ) : Call<Login>
 
     @Headers(
-        "Accept: application/json",
-        "Content-Type:application/json"
+        "Content-Type: application/json"
     )
     @POST("users/create")
     fun register(
         @Body RegisterData : RegisterData
     ) : Call<Register>
 
-    @Headers(
-        "Accept: application/json"
-    )
     @GET("tasks/total")
     fun numberOfTasks(
         @Header("x-access-token") jwtToken : String,
@@ -41,9 +34,6 @@ interface EisonhowerService {
         @Query ("urgence") urgence : Boolean
     ) : Call<NumberOfTasks>
 
-    @Headers(
-        "Accept: application/json"
-    )
     @GET("tasks")
     fun listOfTasks (
         @Header("x-access-token") jwtToken : String,
@@ -51,8 +41,13 @@ interface EisonhowerService {
         @Query ("urgence") urgence : Boolean
     ) : Call<Tasks>
 
+    @GET("tasks")
+    fun AllTasks (
+        @Header("x-access-token") jwtToken : String
+    ) : Call<Tasks>
+
     @Headers(
-        "Accept: application/json"
+        "Content-Type: application/json"
     )
     @POST("tasks")
     fun createTask(
@@ -61,7 +56,7 @@ interface EisonhowerService {
     ) : Call<Void>
 
     @Headers(
-        "Accept: application/json"
+        "Content-Type: application/json"
     )
     @PUT("tasks/{id}")
     fun updateTask(
@@ -70,9 +65,6 @@ interface EisonhowerService {
         @Body toCreateTask : toCreateTask
     ) : Call<Void>
 
-    @Headers(
-        "Accept: application/json"
-    )
     @GET("tasks/{id}")
     fun getTask(
         @Header("x-access-token") jwtToken : String,

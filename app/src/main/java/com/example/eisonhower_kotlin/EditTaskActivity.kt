@@ -8,7 +8,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
 import com.example.eisonhower_kotlin.network.EisonhowerService
-import com.example.eisonhower_kotlin.network.responseObject.BaseTask
+import com.example.eisonhower_kotlin.network.responseObject.Task
+import com.example.eisonhower_kotlin.network.responseObject.Tasks
 import com.example.eisonhower_kotlin.network.toCreateTask
 import com.google.android.material.textfield.TextInputEditText
 import com.xw.repo.BubbleSeekBar
@@ -20,6 +21,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class EditTaskActivity : AppCompatActivity() {
+
+
+    fun getTaskFromList(tasksList: Array<Task?>, taskId: String) : Task? {
+        tasksList.forEach {
+            if (it?.id.toString() == taskId)
+                return (it)
+        }
+        return(null)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +61,12 @@ class EditTaskActivity : AppCompatActivity() {
                         title.text.toString(),
                         description.text.toString(),
                         SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(Date()),
-                        if (done_checkbox.isActivated == false) "open" else "closed"
+                        "open"
                     )
                 )
+
+                Log.d("retrofit", callAsync.toString())
+
                 callAsync.enqueue(object : Callback<Void> {
 
                     override fun onResponse(
@@ -61,6 +74,9 @@ class EditTaskActivity : AppCompatActivity() {
                         response: Response<Void>
                     ) {
                         if (response.isSuccessful()) {
+                            runOnUiThread {
+                                Toast.makeText(applicationContext, "Task Created", Toast.LENGTH_SHORT).show()
+                            }
                             val nextScreenIntent =
                                 Intent(this@EditTaskActivity, MatrixActivity::class.java)
                             nextScreenIntent.putExtra(
@@ -73,7 +89,7 @@ class EditTaskActivity : AppCompatActivity() {
                             }
                             finish()
                         } else {
-                            System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
+                            System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message() + "\nBody:: " + response.body())
                             runOnUiThread {
                                 Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
                             }
@@ -89,51 +105,121 @@ class EditTaskActivity : AppCompatActivity() {
                 })
             }
         } else {
-            Log.d("EditActivity", this@EditTaskActivity.intent.getStringExtra("TASK_ID"))
-            save_button.setOnClickListener {
-                retrofit.create(EisonhowerService::class.java).updateTask(
-                    this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN"),
-                    this@EditTaskActivity.intent.getStringExtra("TASK_ID"),
-                    toCreateTask(
-                        importance_gauge.progress.toString(),
-                        urgency_gauge.progress.toString(),
-                        title.text.toString(),
-                        description.text.toString(),
-                        SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(Date()),
-                        if (done_checkbox.isActivated == false) "open" else "closed"
-                    )
-                ).enqueue(object : Callback<Void> {
-                    override fun onResponse(
-                        call: retrofit2.Call<Void>,
-                        response: Response<Void>
-                    ) {
-                        if (response.isSuccessful()) {
-                            val nextScreenIntent =
-                                Intent(this@EditTaskActivity, MatrixActivity::class.java)
-                            nextScreenIntent.putExtra(
-                                "JWT_TOKEN",
-                                this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN").toString()
-                            )
-                            startActivity(nextScreenIntent)
-                            runOnUiThread{
-                                Toast.makeText(applicationContext, "Task updated", Toast.LENGTH_SHORT).show()
-                            }
-                            finish()
-                        } else {
-                            System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
-                            runOnUiThread {
-                                Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
-                        Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+            val acall = eisonhowerService.AllTasks(
+                this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN")
+            )
+            acall.enqueue(object: Callback<Tasks> {
+                override fun onResponse(
+                    call: retrofit2.Call<Tasks>,
+                    response: Response<Tasks>
+                ) {
+                    if (response.isSuccessful()) {
+                        val r = response.body()
+                        val tasksList = arrayOfNulls<Task>(r?.tasks!!.size)
+                        for (i in 0 until r?.tasks!!.size)
+                            tasksList[i] = r.tasks!![i]
+                        var tmp = getTaskFromList(tasksList, this@EditTaskActivity.intent.getStringExtra("TASK_ID"))
+                        importance_gauge.setProgress(tmp?.importance!!.toFloat())
+                        urgency_gauge.setProgress(tmp?.urgence!!.toFloat())
+                        title.setText(tmp?.title)
+                        description.setText(tmp?.description)
+                    } else {
+                        System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
                         runOnUiThread {
-                            Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
                         }
                     }
-                })
+                }
+
+                override fun onFailure(call: retrofit2.Call<Tasks>, t: Throwable) {
+                    Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+            save_button.setOnClickListener {
+                if (!done_checkbox.isChecked) {
+                    retrofit.create(EisonhowerService::class.java).updateTask(
+                        this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN"),
+                        this@EditTaskActivity.intent.getStringExtra("TASK_ID"),
+                        toCreateTask(
+                            importance_gauge.progress.toString(),
+                            urgency_gauge.progress.toString(),
+                            title.text.toString(),
+                            description.text.toString(),
+                            SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(Date()),
+                            "open"
+                        )
+                    ).enqueue(object : Callback<Void> {
+                        override fun onResponse(
+                            call: retrofit2.Call<Void>,
+                            response: Response<Void>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val nextScreenIntent =
+                                    Intent(this@EditTaskActivity, MatrixActivity::class.java)
+                                nextScreenIntent.putExtra(
+                                    "JWT_TOKEN",
+                                    this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN").toString()
+                                )
+                                startActivity(nextScreenIntent)
+                                runOnUiThread{
+                                    Toast.makeText(applicationContext, "Task updated", Toast.LENGTH_SHORT).show()
+                                }
+                                finish()
+                            } else {
+                                System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
+                                runOnUiThread {
+                                    Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
+                            Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                            runOnUiThread {
+                                Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    })
+                } else {
+                    retrofit.create(EisonhowerService::class.java).deleteTask(
+                        this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN"),
+                        this@EditTaskActivity.intent.getStringExtra("TASK_ID")
+                    ).enqueue(object: Callback<Void> {
+                        override fun onResponse(
+                            call: retrofit2.Call<Void>,
+                            response: Response<Void>
+                        ) {
+                            if (response.isSuccessful()) {
+                                val nextScreenIntent =
+                                    Intent(this@EditTaskActivity, MatrixActivity::class.java)
+                                nextScreenIntent.putExtra(
+                                    "JWT_TOKEN",
+                                    this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN")
+                                )
+                                startActivity(nextScreenIntent)
+                                runOnUiThread{
+                                    Toast.makeText(applicationContext, "Task deleted", Toast.LENGTH_SHORT).show()
+                                }
+                                finish()
+                            } else {
+                                System.out.println("Request Error :: " + response.code() + "\nReponse message :: " + response.message())
+                                runOnUiThread {
+                                    Toast.makeText(applicationContext, "Error from server", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: retrofit2.Call<Void>, t: Throwable) {
+                            Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
+                            runOnUiThread {
+                                Toast.makeText(applicationContext, "Check your internet connection", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    })
+                }
             }
 
             findViewById<Button>(R.id.remove_button).setOnClickListener {
