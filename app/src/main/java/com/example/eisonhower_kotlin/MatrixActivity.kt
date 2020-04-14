@@ -114,6 +114,11 @@ class MatrixActivity : AppCompatActivity() {
         }
         if (R.id.eraseAllTasksMenuButton == item.itemId)
         {
+            val alertDialog: AlertDialog? = this@MatrixActivity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setMessage("Are you sur you want to erase all task ?")
+                    setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
             eisonhowerService.deleteAllTasks(this@MatrixActivity.intent.getStringExtra("JWT_TOKEN")).enqueue(object: Callback<Void> {
                 override fun onResponse(call: retrofit2.Call<Void>, response: Response<Void>)
                 {
@@ -132,6 +137,15 @@ class MatrixActivity : AppCompatActivity() {
                     Log.e("Api_test_call", "Error: " + t.getLocalizedMessage());
                 }
             })
+                    })
+                    setNegativeButton("Cancel",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            // User cancelled the dialog
+                        })
+                }
+                builder.create()
+            }
+            alertDialog?.show()
             Toast.makeText(applicationContext, "erase tasks", Toast.LENGTH_LONG).show()
             return true
         }
