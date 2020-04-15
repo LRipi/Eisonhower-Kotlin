@@ -108,7 +108,7 @@ class LoginActivity : AppCompatActivity() {
 
             login.setOnClickListener {
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("http://vps.lemartret.com:3000/")
+                    .baseUrl("http://10.0.2.2:3000/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 val eisonhowerService = retrofit.create(EisonhowerService::class.java)

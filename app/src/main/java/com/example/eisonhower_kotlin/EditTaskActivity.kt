@@ -46,12 +46,15 @@ class EditTaskActivity : AppCompatActivity() {
         val done_checkbox = findViewById<CheckBox>(R.id.checkBox)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://vps.lemartret.com:3000/")
+            .baseUrl("http://10.0.2.2:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val eisonhowerService = retrofit.create(EisonhowerService::class.java)
 
         if (this@EditTaskActivity.intent.getStringExtra("TASK_ID") == null) {
+            Log.d("yonk", SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()))
+            var today = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()).toString()
+            Log.d("yonk2", today)
             save_button.setOnClickListener {
                 val callAsync = eisonhowerService.createTask(
                     this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN"),
@@ -60,7 +63,7 @@ class EditTaskActivity : AppCompatActivity() {
                         urgency_gauge.progress.toString(),
                         title.text.toString(),
                         description.text.toString(),
-                        SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(Date()),
+                        today,
                         "open"
                     )
                 )
@@ -140,6 +143,7 @@ class EditTaskActivity : AppCompatActivity() {
             })
             save_button.setOnClickListener {
                 if (!done_checkbox.isChecked) {
+                    var today = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()).toString()
                     retrofit.create(EisonhowerService::class.java).updateTask(
                         this@EditTaskActivity.intent.getStringExtra("JWT_TOKEN"),
                         this@EditTaskActivity.intent.getStringExtra("TASK_ID"),
@@ -148,7 +152,7 @@ class EditTaskActivity : AppCompatActivity() {
                             urgency_gauge.progress.toString(),
                             title.text.toString(),
                             description.text.toString(),
-                            SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(Date()),
+                            today,
                             "open"
                         )
                     ).enqueue(object : Callback<Void> {
@@ -201,7 +205,7 @@ class EditTaskActivity : AppCompatActivity() {
                                 )
                                 startActivity(nextScreenIntent)
                                 runOnUiThread{
-                                    Toast.makeText(applicationContext, "Task deleted", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(applicationContext, "Task done", Toast.LENGTH_SHORT).show()
                                 }
                                 finish()
                             } else {

@@ -64,7 +64,7 @@ class TaskListAdapter(private val context: Context,
         val card = rowView.findViewById<TextView>(R.id.task_tile)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://vps.lemartret.com:3000/")
+            .baseUrl("http://10.0.2.2:3000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val eisonhowerService = retrofit.create(EisonhowerService::class.java)
@@ -87,8 +87,8 @@ class TaskListAdapter(private val context: Context,
                     response: Response<Void>
                 ) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(context, R.id.task_tile.toString() + " is done", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(context, EditTaskActivity::class.java)
+                        Toast.makeText(context,  "Task done", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(context, MatrixActivity::class.java)
                         intent.putExtra("JWT_TOKEN", jwtToken)
                         startActivity(context, intent, null)
                     } else {
